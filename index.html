@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Що? Де? Коли? — Інформатика 8 клас</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-space: #0d1117;
+            --panel-bg: rgba(22, 27, 34, 0.9);
+            --accent-cyan: #4cc9f0;
+            --accent-gold: #f59e0b;
+            --accent-neon: #10b981;
+            --text-light: #f8fafc;
+            --text-muted: #8b949e;
+            --danger: #f85149;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-space);
+            background-image: 
+                radial-gradient(#1f2937 1px, transparent 1px),
+                radial-gradient(#1f2937 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(76, 201, 240, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        select, input[type="text"] {
+            background: #21262d;
+            border: 2px solid #30363d;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            width: 100%;
+            max-width: 400px;
+            outline: none;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+        }
+
+        .team-input-list, .players-input-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+        }
+
+        .player-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-cyan), #3a0ca3);
+            color: white;
+            font-weight: 700;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.3);
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 201, 240, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #475569, #334155);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 12px 20px;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .round-indicator {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .diff-easy { background: #065f46; color: #34d399; }
+        .diff-medium { background: #9a3412; color: #fbbf24; }
+        .diff-hard { background: #991b1b; color: #f87171; }
+
+        .current-team-badge {
+            background: #21262d;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            font-size: 1.1rem;
+        }
+
+        .current-team-badge span {
+            color: var(--accent-neon);
+            font-weight: 700;
+        }
+
+        .question-box {
+            background: #161b22;
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border-left: 6px solid var(--accent-cyan);
+            text-align: left;
+        }
+
+        .question-topic {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+
+        .option-btn {
+            background: #21262d;
+            border: 2px solid #30363d;
+            color: white;
+            padding: 20px;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #38bdf8;
+            border-color: #0284c7;
+            color: #0f172a;
+            transform: scale(1.02);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background: var(--accent-neon) !important;
+            border-color: #059669 !important;
+            color: black !important;
+        }
+
+        .option-btn.wrong {
+            background: var(--danger) !important;
+            border-color: #b91c1c !important;
+            color: white !important;
+        }
+
+        .scoreboard-inline {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 35px;
+            background: #161b22;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .score-pill {
+            background: #21262d;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            border: 1px solid #30363d;
+        }
+
+        .score-pill.active-turn {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(76, 201, 240, 0.4);
+        }
+
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            height: 300px;
+            margin: 40px 0;
+            padding-bottom: 20px;
+            border-bottom: 4px solid #30363d;
+        }
+
+        .podium-place {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 140px;
+            transition: all 0.5s ease;
+        }
+
+        .podium-block {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .podium-team-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .podium-score {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .place-1 .podium-block { background: linear-gradient(to top, #b45309, #f59e0b); height: 180px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.5); }
+        .place-2 .podium-block { background: linear-gradient(to top, #334155, #94a3b8); height: 130px; color: white; }
+        .place-3 .podium-block { background: linear-gradient(to top, #78350f, #b45309); height: 90px; }
+        .place-4 .podium-block { background: linear-gradient(to top, #21262d, #484f58); height: 60px; color: white; }
+        .place-5 .podium-block { background: linear-gradient(to top, #0d1117, #21262d); height: 40px; color: white; }
+
+        .wishes {
+            font-size: 1.5rem;
+            color: var(--accent-neon);
+            font-weight: 700;
+            margin-top: 30px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Що? Де? Коли?</h1>
+    <div class="subtitle">Інтелектуальна гра з Інформатики | 8 Клас</div>
+
+    <div id="screen-players-setup" class="screen active">
+        <div class="form-group">
+            <label for="teams-count-select">Оберіть кількість команд:</label>
+            <select id="teams-count-select" style="max-width: 200px;">
+                <option value="1">1 команда</option>
+                <option value="2">2 команди</option>
+                <option value="3">3 команди</option>
+                <option value="4">4 команди</option>
+                <option value="5" selected>5 команд</option>
+            </select>
+        </div>
+        
+        <label>Додайте учасників гри:</label>
+        <div id="players-inputs-container" class="players-input-list">
+            <div class="player-row"><input type="text" class="player-name-input" placeholder="Ім'я учасника" value=""></div>
+        </div>
+        <button class="btn btn-secondary" onclick="addPlayerField()">+ Додати учасника</button>
+        <br><br>
+        <button class="btn" onclick="distributePlayersAndGoNext()">Розподілити по командах</button>
+    </div>
+
+    <div id="screen-teams-names" class="screen">
+        <label>Згенеровані команди та знавці:</label>
+        <div id="team-inputs-container" class="team-input-list"></div>
+        <button class="btn" onclick="startGame()">Розпочати гру</button>
+    </div>
+
+    <div id="screen-game" class="screen">
+        <div class="game-header">
+            <div>
+                <div id="round-num" class="round-indicator">Раунд 1 із 12</div>
+                <div id="difficulty-indicator" class="difficulty-badge diff-easy">Легкий</div>
+            </div>
+            <div class="current-team-badge">Відповідає команда: <span id="current-team-display">Команда</span><br><small style="color:var(--text-muted)">Черга учасника: <span id="current-player-display" style="color:var(--accent-gold)">Учень</span></small></div>
+        </div>
+
+        <div class="question-box">
+            <div id="q-topic" class="question-topic">Тема</div>
+            <div id="q-text" class="question-text">Текст запитання?</div>
+        </div>
+
+        <div id="options-container" class="options-grid"></div>
+
+        <button id="next-btn" class="btn" style="display: none;" onclick="nextStep()">Наступне запитання</button>
+
+        <div id="scoreboard" class="scoreboard-inline"></div>
+    </div>
+
+    <div id="screen-results" class="screen">
+        <h2 id="final-title">Фінал гри! Вітаємо переможців!</h2>
+        <div id="podium" class="podium-container"></div>
+        <div class="wishes">
+            Успіхів у подальшому зануренні в програмування, бази даних та дизайн-мислення! <br>🚀 Ви — цифрові лідери 2026 року! 🚀
+        </div>
+        <div style="margin-top: 30px;">
+            <button class="btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white;" onclick="downloadGeneralReportPDF()">Загальний звіт (PDF)</button>
+            <button class="btn btn-secondary" onclick="location.reload()">Грати знову</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questionsDatabase = {
+        easy: [
+            { topic: "Кодування даних. Системи числення", q: "Яка система числення використовується у внутрішній пам'яті комп'ютера для представлення будь-яких даних?", a: ["Двійкова", "Десяткова", "Шістнадцяткова"], correct: 0 },
+            { topic: "Архітектура комп’ютера", q: "Який пристрій називають 'мозком' комп'ютера, що виконує всі обчислення та обробку інформації?", a: ["Центральний процесор (CPU)", "Жорсткий диск (HDD)", "Оперативна пам'ять (RAM)"], correct: 0 },
+            { topic: "Операційні системи", q: "Що з переліченого належить до системного програмного забезпечення, без якого комп'ютер не може працювати?", a: ["Операційна система", "Текстовий процесор Word", "Графічний редактор Figma"], correct: 0 },
+            { topic: "Збереження даних", q: "Який тип пам'яті комп'ютера повністю очищується при вимкненні живлення?", a: ["Оперативна пам'ять (RAM)", "Постійна пам'ять (SSD/HDD)", "Флеш-накопичувач (USB)"], correct: 0 },
+            { topic: "Захист цифрових пристроїв та інформації", q: "Який метод захисту є найнадійнішим для запобігання втрати важливих файлів через поломку пристрою?", a: ["Регулярне резервне копіювання (Backup)", "Встановлення пароля на вхід", "Встановлення яскравих шпалер"], correct: 0 },
+            { topic: "Збір даних", q: "Який інструмент найчастіше використовується для онлайн-опитування великої кількості людей з автоматичним збором відповідей?", a: ["Google Форми або вебформи", "Текстовий документ у Блокноті", "Паперовий лист"], correct: 0 }
+        ],
+        medium: [
+            { topic: "Кодування даних. Переведення чисел", q: "Чому дорівнює десяткове число 5 у двійковій системі числення?", a: ["101", "111", "100"], correct: 0 },
+            { topic: "Архітектура комп’ютера. Пристрої вводу/виводу", q: "Який із пристроїв призначений виключно для ВИВЕДЕННЯ інформації?", a: ["Монітор", "Клавіатура", "Сканер"], correct: 0 },
+            { topic: "Операційні системи. Файлова система", q: "Яка структура є основою організації файлів та папок у більшості сучасних операційних систем?", a: ["Ієрархічна (деревовидна)", "Лінійна таблиця", "Мережева хаотична"], correct: 0 },
+            { topic: "Сучасні технології", q: "Що таке 'Інтернет речей' (IoT)?", a: ["Мережа фізичних об'єктів, обладнаних датчиками для взаємодії між собою", "Процес покупки речей в онлайн-магазинах", "Велика база даних про світову моду"], correct: 0 },
+            { topic: "Технології та навколишнє середовище", q: "Яка основна екологічна проблема пов'язана з постійним оновленням цифрових гаджетів?", a: ["Збільшення кількості електронного сміття (E-waste)", "Надмірне очищення повітря дата-центрами", "Зменшення кількості інтернет-кабелів"], correct: 0 },
+            { topic: "Додаткові параметри форматування. Перевірка даних", q: "Навіщо в таблицях (Excel/Sheets) використовують інструмент 'Перевірка даних' (Data Validation)?", a: ["Щоб обмежити введення некоректних значень (наприклад, тільки числа або значення зі списку)", "Щоб автоматично перекласти текст на іншу мову", "Щоб приховати формули від інших"], correct: 0 },
+            { topic: "Прості обчислення", q: "З якого символу обов'язково починається будь-яка формула чи функція в електронних таблицях?", a: ["Знак рівності (=)", "Знак плюс (+)", "Символ @"], correct: 0 },
+            { topic: "Діаграми та графіки", q: "Який тип діаграми найкраще використовувати для демонстрації часток або відсотків від єдиного цілого?", a: ["Кругова діаграма", "Гістограма (стовпчаста)", "Графік лінії"], correct: 0 },
+            { topic: "Моделювання", q: "Для чого створюють комп'ютерні моделі реальних об'єктів або процесів?", a: ["Для дослідження властивостей об'єкта без проведення дорогих чи небезпечних експериментів", "Тільки для розваги та створення красивої 3D графіки", "Щоб повністю замінити підручники"], correct: 0 },
+            { topic: "Що таке програма", q: "Який процес виконує транслятор (компілятор) з кодом програми?", a: ["Перетворює вихідний код високого рівня на машинний код 0 та 1", "Перевіряє граматичні помилки в коментарях", "Автоматично публікує програму в інтернет"], correct: 0 },
+            { topic: "Змінні та команди. Типи даних", q: "Який тип даних слід обрати для збереження значень на кшталт True (Істина) або False (Хибність)?", a: ["Логічний (Boolean)", "Ціле число (Integer)", "Рядок тексту (String)"], correct: 0 },
+            { topic: "Умови та розгалуження. Умови", q: "За допомогою якого ключового слова в більшості мов програмування будується конструкція розгалуження?", a: ["if", "for", "while"], correct: 0 },
+            { topic: "Векторний графічний редактор", q: "Яка головна перевага векторної графіки над растровою при масштабуванні?", a: ["Зображення не втрачає якості та чіткості при будь-якому збільшенні", "Зображення займає значно більше місця на диску", "Векторне зображення завжди має реалістичний фотографічний вигляд"], correct: 0 },
+            { topic: "Типографіка", q: "Що вивчає типографіка в контексті дизайну інтерфейсів?", a: ["Мистецтво оформлення та розташування тексту, вибір шрифтів та їх читабельність", "Процес друку на 3D принтерах", "Кольорові палітри для фонових зображень"], correct: 0 },
+            { topic: "Створення вебсторінки", q: "Яка мова розмітки є базовою структурою будь-якої сторінки в інтернеті?", a: ["HTML", "CSS", "Python"], correct: 0 },
+            { topic: "Бренд і фірмовий стиль", q: "Як називається офіційний документ компанії, що містить правила використання елементів фірмового стилю, логотипу та кольорів?", a: ["Брендбук", "Технічне завдання", "Блокнот"], correct: 0 }
+        ],
+        hard: [
+            { topic: "Складні розрахунки. Логічні функції", q: "Яке значення поверне функція =AND(5>3; 2>10) в електронній таблиці?", a: ["FALSE (Хибність)", "TRUE (Істина)", "Помилка #VALUE!"], correct: 0 },
+            { topic: "Вкладені функції", q: "Яка конструкція описує вкладену логічну функцію IF (ЯКЩО)?", a: ["Коли всередині параметру 'інакше' або 'тоді' викликається ще одна функція IF", "Коли дві формули написані в сусідніх комірках", "Коли формула підкреслена жирним шрифтом"], correct: 0 },
+            { topic: "Посилання", q: "Який вигляд має АБСОЛЮТНЕ посилання на комірку А1, яке не змінюється при копіюванні формули?", a: ["$A$1", "A1", "$A1"], correct: 0 },
+            { topic: "Працюємо зі списками", q: "Який індекс (номер елемента) має ПЕРШИЙ елемент списку у більшості мов програмування (наприклад, Python)?", a: ["0", "1", "-1"], correct: 0 },
+            { topic: "Умови та розгалуження. Цикли", q: "Який тип циклу використовують, коли кількість повторень заздалегідь НЕВІДОМА і залежить від виконання певної умови?", a: ["Цикл із передумовою (while)", "Цикл із лічильником (for)", "Вкладене розгалуження (if)"], correct: 0 },
+            { topic: "Функції. Глобальні та локальні змінні", q: "Яка область видимості у локальної змінної, що створена всередині функції?", a: ["Вона доступна ТІЛЬКИ всередині цієї конкретної функції", "Вона доступна в будь-якому місці програми", "Вона зберігається на сервері"], correct: 0 },
+            { topic: "Графічний інтерфейс продукта. UI/UX дизайн", q: "У чому головна відмінність між UI та UX в дизайні продуктів?", a: ["UX — це логіка роботи та зручність для користувача; UI — це візуальний вигляд (кольори, кнопки)", "UI — це розробка коду; UX — це малювання ілюстрацій", "Це абсолютно однакові поняття"], correct: 0 },
+            { topic: "Композиція та Макет", q: "Що таке 'Вайрфрейм' (Wireframe) або прототип низької точності при проектуванні сайту?", a: ["Схематичний чорно-білий ескіз розташування блоків без детального дизайну", "Готовий зверстаний сайт з анімаціями", "Офіційний логотип компанії"], correct: 0 },
+            { topic: "HTML та CSS", q: "Яка технологія відповідає за оформлення, стилі, кольори та шрифти веб-сторінки?", a: ["CSS", "HTML", "SQL"], correct: 0 },
+            { topic: "HTML та CSS (Селектори)", q: "За допомогою якого символу в таблиці стилів CSS позначається селектор для ідентифікатора (id)?", a: ["Хештег (#)", "Крапка (.)", "Зірочка (*)"], correct: 0 },
+            { topic: "Вебформи", q: "Який тег HTML використовується для створення поля введення тексту користувачем у веб-формах?", a: ["<input>", "<form>", "<label>"], correct: 0 },
+            { topic: "Хостинг та SEO", q: "Що таке SEO (Search Engine Optimization)?", a: ["Оптимізація сайту для підняття його позицій у результатах пошукових систем", "Процес завантаження файлів сайту на сервер", "Захист сайту від кібератак"], correct: 0 },
+            { topic: "Система контролю версій", q: "Для чого розробники використовують системи контролю версій (наприклад, Git)?", a: ["Для відстеження змін у коді, збереження історії та спільної роботи над проектом", "Для автоматичного прискорення роботи комп'ютера", "Для перекладу коду на інші мови"], correct: 0 },
+            { topic: "Технології генерування ідей", q: "Яке головне правило під час проведення класичного 'Мозкового штурму' (Brainstorming)?", a: ["Будь-яка критика ідей на першому етапі заборонена", "Потрібно критикувати кожну ідею одразу", "Ідеї записує тільки вчитель"], correct: 0 },
+            { topic: "Дизайн-мислення", q: "З якого етапу завжди починається процес Дизайн-мислення (Design Thinking)?", a: ["Емпатія (розуміння потреб користувача)", "Генерування ідей", "Тестування прототипу"], correct: 0 },
+            { topic: "Проблеми сучасних технологій", q: "Який термін описує нерівність у доступі до сучасних технологій та інтернету між різними верствами населення чи країнами?", a: ["Цифровий розрив (Digital Divide)", "Кібербулінг", "Авторське право"], correct: 0 }
+        ]
+    };
+
+    let gameQuestions = [];
+    let teams = [];
+    let allPlayersGlobal = [];
+    let currentQuestionIndex = 0;
+    let currentTeamIndex = 0;
+    let currentPlayerIndexInTeam = 0; 
+    let currentQuestionVotes = {}; 
+    let currentAnswersMapping = [];
+    const totalRounds = 12;
+
+    function addPlayerField() {
+        const container = document.getElementById('players-inputs-container');
+        const div = document.createElement('div');
+        div.className = 'player-row';
+        div.innerHTML = `
+            <input type="text" class="player-name-input" placeholder="Ім'я учасника">
+            <button class="btn btn-danger" onclick="this.parentElement.remove()">X</button>
+        `;
+        container.appendChild(div);
+    }
+
+    function distributePlayersAndGoNext() {
+        const inputElements = document.querySelectorAll('.player-name-input');
+        let players = [];
+        
+        inputElements.forEach(input => {
+            let name = input.value.trim();
+            if (name) players.push({ name: name, questionsAsked: 0, correctAnswers: 0 });
+        });
+
+        if (players.length === 0) {
+            alert("Будь ласка, введіть хоча б одне ім'я учасника!");
+            return;
+        }
+
+        allPlayersGlobal = players;
+
+        const teamsCount = parseInt(document.getElementById('teams-count-select').value);
+        
+        teams = [];
+        for(let i = 1; i <= teamsCount; i++) {
+            teams.push({ name: `Команда ${i}`, score: 0, players: [] });
+        }
+
+        let shuffledPlayers = [...players].sort(() => 0.5 - Math.random());
+        shuffledPlayers.forEach((player, idx) => {
+            let teamIdx = idx % teamsCount;
+            teams[teamIdx].players.push(player);
+        });
+
+        teams = teams.filter(team => team.players.length > 0);
+
+        if (teams.length === 0) {
+            alert("Помилка розподілу учасників!");
+            return;
+        }
+
+        const container = document.getElementById('team-inputs-container');
+        container.innerHTML = '';
+        teams.forEach((team, idx) => {
+            let playersListStr = team.players.map(p => p.name).join(', ');
+            container.innerHTML += `
+                <div class="form-group" style="width: 100%; max-width: 500px; background: rgba(255,255,255,0.05); padding: 15px; border-radius:12px;">
+                    <input type="text" id="team-name-change-${idx}" value="${team.name}" style="margin-bottom: 8px;">
+                    <div style="font-size: 0.9rem; color: var(--text-muted)">Склад: ${playersListStr}</div>
+                </div>
+            `;
+        });
+
+        switchScreen('screen-teams-names');
+    }
+
+    function startGame() {
+        teams.forEach((team, idx) => {
+            const input = document.getElementById(`team-name-change-${idx}`);
+            if (input && input.value.trim()) {
+                team.name = input.value.trim();
+            }
+        });
+
+        const easyShuffled = [...questionsDatabase.easy].sort(() => 0.5 - Math.random()).slice(0, 4);
+        const mediumShuffled = [...questionsDatabase.medium].sort(() => 0.5 - Math.random()).slice(0, 4);
+        const hardShuffled = [...questionsDatabase.hard].sort(() => 0.5 - Math.random()).slice(0, 4);
+        
+        gameQuestions = [...easyShuffled, ...mediumShuffled, ...hardShuffled];
+
+        currentQuestionIndex = 0;
+        currentTeamIndex = 0;
+        currentPlayerIndexInTeam = 0;
+        currentQuestionVotes = {};
+
+        updateScoreboard();
+        showQuestion();
+        switchScreen('screen-game');
+    }
+
+    function showQuestion() {
+        document.getElementById('next-btn').style.display = 'none';
+        const qData = gameQuestions[currentQuestionIndex];
+        
+        const diffBadge = document.getElementById('difficulty-indicator');
+        if (currentQuestionIndex < 4) {
+            diffBadge.innerText = "Легкий";
+            diffBadge.className = "difficulty-badge diff-easy";
+        } else if (currentQuestionIndex < 8) {
+            diffBadge.innerText = "Середній";
+            diffBadge.className = "difficulty-badge diff-medium";
+        } else {
+            diffBadge.innerText = "Складний";
+            diffBadge.className = "difficulty-badge diff-hard";
+        }
+
+        const activeTeam = teams[currentTeamIndex];
+        const activePlayer = activeTeam.players[currentPlayerIndexInTeam];
+
+        document.getElementById('round-num').innerText = `Раунд ${currentQuestionIndex + 1} із ${totalRounds}`;
+        document.getElementById('current-team-display').innerText = activeTeam.name;
+        document.getElementById('current-player-display').innerText = `${activePlayer.name} (${currentPlayerIndexInTeam + 1}/${activeTeam.players.length})`;
+        document.getElementById('q-topic').innerText = `Тема: ${qData.topic}`;
+        document.getElementById('q-text').innerText = qData.q;
+
+        const originalOptions = qData.a;
+        currentAnswersMapping = originalOptions.map((_, i) => i).sort(() => 0.5 - Math.random());
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        currentAnswersMapping.forEach((originalIdx, buttonIdx) => {
+            optionsContainer.innerHTML += `
+                <button class="option-btn" data-orig-idx="${originalIdx}" onclick="checkAnswer(${originalIdx}, this)">
+                    ${String.fromCharCode(65 + buttonIdx)}) &nbsp; ${originalOptions[originalIdx]}
+                </button>
+            `;
+        });
+
+        highlightCurrentTeamInScoreboard();
+    }
+
+    function checkAnswer(selectedIndex, clickedBtn) {
+        const qData = gameQuestions[currentQuestionIndex];
+        const activeTeam = teams[currentTeamIndex];
+        const activePlayer = activeTeam.players[currentPlayerIndexInTeam];
+
+        activePlayer.questionsAsked += 1;
+        if (selectedIndex === qData.correct) {
+            activePlayer.correctAnswers += 1;
+            currentQuestionVotes[currentPlayerIndexInTeam] = true;
+        } else {
+            currentQuestionVotes[currentPlayerIndexInTeam] = false;
+        }
+
+        currentPlayerIndexInTeam++;
+
+        if (currentPlayerIndexInTeam < activeTeam.players.length) {
+            showQuestion();
+        } else {
+            let correctCount = 0;
+            for (let idx in currentQuestionVotes) {
+                if (currentQuestionVotes[idx] === true) correctCount++;
+            }
+            
+            let teamFraction = correctCount / activeTeam.players.length;
+            activeTeam.score += teamFraction;
+
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                let origIdx = parseInt(btn.getAttribute('data-orig-idx'));
+                if (origIdx === qData.correct) {
+                    btn.classList.add('correct');
+                } else if (origIdx === selectedIndex && !currentQuestionVotes[currentPlayerIndexInTeam - 1]) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            updateScoreboard();
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+    }
+
+    function nextStep() {
+        currentPlayerIndexInTeam = 0;
+        currentQuestionVotes = {};
+
+        currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+        
+        if (currentTeamIndex === 0) {
+            currentQuestionIndex++;
+        }
+
+        if (currentQuestionIndex < totalRounds) {
+            showQuestion();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function updateScoreboard() {
+        const sb = document.getElementById('scoreboard');
+        sb.innerHTML = '';
+        teams.forEach((team, idx) => {
+            sb.innerHTML += `
+                <div class="score-pill" id="score-pill-${idx}">
+                    ${team.name}: <strong>${team.score.toFixed(2)}</strong> б.
+                </div>
+            `;
+        });
+    }
+
+    function highlightCurrentTeamInScoreboard() {
+        teams.forEach((_, idx) => {
+            const pill = document.getElementById(`score-pill-${idx}`);
+            if (pill) {
+                if (idx === currentTeamIndex) {
+                    pill.classList.add('active-turn');
+                } else {
+                    pill.classList.remove('active-turn');
+                }
+            }
+        });
+    }
+
+    let sortedTeamsGlobal = [];
+    let teamRanksMapping = {}; 
+
+    function showFinalResults() {
+        switchScreen('screen-results');
+        const podiumContainer = document.getElementById('podium');
+        podiumContainer.innerHTML = '';
+
+        sortedTeamsGlobal = [...teams].sort((a, b) => b.score - a.score);
+
+        let currentRank = 1;
+        teamRanksMapping = {};
+        
+        sortedTeamsGlobal.forEach((team, idx) => {
+            if (idx > 0 && team.score.toFixed(2) === sortedTeamsGlobal[idx - 1].score.toFixed(2)) {
+                teamRanksMapping[team.name] = teamRanksMapping[sortedTeamsGlobal[idx - 1].name];
+            } else {
+                teamRanksMapping[team.name] = currentRank;
+            }
+            currentRank++;
+        });
+
+        let isAbsoluteTie = sortedTeamsGlobal.length > 1 && 
+            (sortedTeamsGlobal[0].score.toFixed(2) === sortedTeamsGlobal[sortedTeamsGlobal.length - 1].score.toFixed(2));
+
+        if (isAbsoluteTie) {
+            document.getElementById('final-title').innerText = "Фінал гри! Нічия між усіма командами!";
+        } else if (sortedTeamsGlobal[1] && sortedTeamsGlobal[0].score.toFixed(2) === sortedTeamsGlobal[1].score.toFixed(2)) {
+            document.getElementById('final-title').innerText = "Фінал гри! Нічия на першому місці!";
+        } else {
+            document.getElementById('final-title').innerText = "Фінал гри! Вітаємо переможців!";
+        }
+
+        let renderOrder = [];
+        if (sortedTeamsGlobal.length === 1) {
+            renderOrder = [0];
+        } else if (sortedTeamsGlobal.length === 2) {
+            renderOrder = [1, 0];
+        } else {
+            const positions = [];
+            if (sortedTeamsGlobal[1]) positions.push(1); 
+            positions.push(0); 
+            if (sortedTeamsGlobal[2]) positions.push(2); 
+            if (sortedTeamsGlobal[3]) positions.push(3); 
+            if (sortedTeamsGlobal[4]) positions.push(4); 
+            renderOrder = positions.filter(p => p < sortedTeamsGlobal.length);
+        }
+
+        renderOrder.forEach(originalIndex => {
+            const team = sortedTeamsGlobal[originalIndex];
+            const rank = teamRanksMapping[team.name]; 
+
+            podiumContainer.innerHTML += `
+                <div class="podium-place place-${Math.min(rank, 5)}">
+                    <div class="podium-team-name">${team.name}</div>
+                    <div class="podium-score">${team.score.toFixed(2)} б.</div>
+                    <div class="podium-block">${rank}</div>
+                </div>
+            `;
+        });
+    }
+
+    function downloadGeneralReportPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        canvas.width = 1200;
+        canvas.height = 1600;
+        
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 36px Montserrat, Helvetica, sans-serif';
+        ctx.fillText("ЗВІТ РЕЗУЛЬТАТІВ ІНТЕЛЕКТУАЛЬНОЇ ГРИ", 80, 100);
+        
+        ctx.font = '600 24px Montserrat, Helvetica, sans-serif';
+        ctx.fillStyle = '#475569';
+        ctx.fillText("Назва гри: Що? Де? Коли? — Інформатика 8 Клас", 80, 150);
+        
+        let currentDate = new Date().toLocaleDateString('uk-UA');
+        ctx.font = '20px Montserrat, Helvetica, sans-serif';
+        ctx.fillText(`Дата проведення: ${currentDate}`, 80, 200);
+        ctx.fillText(`Загальна кількість раундів: ${totalRounds}`, 80, 235);
+        
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(80, 270);
+        ctx.lineTo(1120, 270);
+        ctx.stroke();
+        
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 26px Montserrat, Helvetica, sans-serif';
+        ctx.fillText("РЕЙТИНГ КОМАНД ТА МІСЦЯ:", 80, 330);
+        
+        ctx.font = '22px Montserrat, Helvetica, sans-serif';
+        let yOffset = 380;
+        sortedTeamsGlobal.forEach(team => {
+            let rank = teamRanksMapping[team.name];
+            ctx.fillText(`• ${team.name}: ${team.score.toFixed(2)} балів (Місце: ${rank})`, 100, yOffset);
+            yOffset += 40;
+        });
+        
+        yOffset += 20;
+        ctx.beginPath();
+        ctx.moveTo(80, yOffset);
+        ctx.lineTo(1120, yOffset);
+        ctx.stroke();
+        
+        yOffset += 50;
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 26px Montserrat, Helvetica, sans-serif';
+        ctx.fillText("ПЕРСОНАЛЬНА ПРОДУКТИВНІСТЬ УЧАСНИКІВ (1-12 балів):", 80, yOffset);
+        yOffset += 50;
+        
+        teams.forEach(team => {
+            let rank = teamRanksMapping[team.name];
+            let bonusPoints = 0;
+            let bonusStr = "0";
+            if (rank === 1) { bonusPoints = 3; bonusStr = "+3 (1 місце)"; }
+            else if (rank === 2) { bonusPoints = 2; bonusStr = "+2 (2 місце)"; }
+            else if (rank === 3) { bonusPoints = 1; bonusStr = "+1 (3 місце)"; }
+
+            team.players.forEach(player => {
+                let accuracy = 0;
+                if(player.questionsAsked > 0) {
+                    accuracy = (player.correctAnswers / player.questionsAsked) * 100;
+                }
+                
+                let baseGrade = Math.round((accuracy / 100) * 12);
+                if (baseGrade < 1 && player.questionsAsked > 0) baseGrade = 1;
+                if (player.correctAnswers === 0) baseGrade = 0;
+
+                let finalGrade = Math.min(12, baseGrade + bonusPoints);
+
+                ctx.fillStyle = '#1e293b';
+                ctx.font = '600 20px Montserrat, Helvetica, sans-serif';
+                ctx.fillText(`Гравець: ${player.name} | Команда: ${team.name} (Місце: ${rank})`, 100, yOffset);
+                yOffset += 30;
+                
+                ctx.fillStyle = '#64748b';
+                ctx.font = '18px Montserrat, Helvetica, sans-serif';
+                ctx.fillText(`   Відповіді: ${player.correctAnswers}/${player.questionsAsked} (${accuracy.toFixed(0)}%) | База: ${baseGrade}/12 | Бонус: ${bonusStr} | РАЗОМ: ${finalGrade} б.`, 100, yOffset);
+                yOffset += 50;
+            });
+        });
+        
+        let imgData = canvas.toDataURL('image/jpeg', 1.0);
+        doc.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+        
+        doc.save("Звіт_Що_Де_Коли_8_Клас.pdf");
+    }
+
+    function switchScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
