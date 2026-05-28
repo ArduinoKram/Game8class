@@ -490,7 +490,7 @@
             { id: "h8", topic: "Композиція та Макет", q: "Що таке 'Вайрфрейм' (Wireframe) або прототип низької точності при проектуванні сайту?", a: ["Схематичний чорно-білий ескіз розташування блоків без детального дизайну", "Готовий зверстаний сайт з анімаціями", "Офіційний логотип компанії"], correct: 0 },
             { id: "h9", topic: "HTML та CSS", q: "Яка технологія відповідає за оформлення, стилі, кольори та шрифти веб-сторінки?", a: ["CSS", "HTML", "SQL"], correct: 0 },
             { id: "h10", topic: "HTML та CSS (Селектори)", q: "За допомогою якого символу в таблиці стилів CSS позначається селектор для ідентифікатора (id)?", a: ["Хештег (#)", "Крапка (.)", "Зірочка (*)"], correct: 0 },
-            { id: "h11", topic: "Вебформи", q: "Який тег HTML використовується для створення поля введення тексту користувачем у веб-формах?", a: ["<input>", "<form>", "<label>"], correct: 0 },
+            { id: "h11", topic: "Вебформи", q: "Який тег HTML використовується для створення поля введення тексту користувачем у веб-формах?", a: ["&lt;input&gt;", "&lt;form&gt;", "&lt;label&gt;"], correct: 0 },
             { id: "h12", topic: "Хостинг та SEO", q: "Що таке SEO (Search Engine Optimization)?", a: ["Оптимізація сайту для підняття його позицій у результатах пошукових систем", "Процес завантаження файлів сайту на сервер", "Захист сайту від кібератак"], correct: 0 },
             { id: "h13", topic: "Система контролю версій", q: "Для чого розробники використовують системи контролю версій (наприклад, Git)?", a: ["Для відстеження змін у коді, збереження історії та спільної роботи над проектом", "Для автоматичного прискорення роботи комп'ютера", "Для перекладу коду на інші мови"], correct: 0 },
             { id: "h14", topic: "Технології генерування ідей", q: "Яке головне правило під час проведення класичного 'Мозкового штурму' (Brainstorming)?", a: ["Будь-яка критика ідей на першому етапі заборонена", "Потрібно критикувати кожну ідею одразу", "Ідеї записує тільки вчитель"], correct: 0 },
@@ -659,17 +659,22 @@
             
             if (isRevealed) {
                 if (originalIdx === selectedGlobalQuestion.correct) {
-                    extraClass = ' correct'; // зелений для правильної
+                    extraClass = ' correct'; 
                 } else if (originalIdx === selectedIdxByLast && originalIdx !== selectedGlobalQuestion.correct) {
-                    extraClass = ' wrong'; // червоний для останньої помилки
+                    extraClass = ' wrong'; 
                 }
             }
 
-            optionsContainer.innerHTML += `
-                <button class="option-btn${extraClass}" data-orig-idx="${originalIdx}" ${isRevealed ? 'disabled' : ''} onclick="handlePlayerChoiceClick(${originalIdx})">
-                    ${String.fromCharCode(65 + buttonIdx)}) &nbsp; ${originalOptions[originalIdx]}
-                </button>
-            `;
+            const btn = document.createElement('button');
+            btn.className = `option-btn${extraClass}`;
+            btn.setAttribute('data-orig-idx', originalIdx);
+            if (isRevealed) btn.disabled = true;
+            btn.onclick = () => handlePlayerChoiceClick(originalIdx);
+            
+            // Використовуємо textContent замість innerHTML, щоб браузер не ламав теги на кшталт <input>
+            btn.textContent = `${String.fromCharCode(65 + buttonIdx)})   ${originalOptions[originalIdx]}`;
+
+            optionsContainer.appendChild(btn);
         });
     }
 
