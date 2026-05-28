@@ -209,6 +209,17 @@
             font-weight: 700;
         }
 
+        .voting-status-box {
+            background: #1f2937;
+            border: 1px dashed var(--accent-gold);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
         .question-box {
             background: #161b22;
             padding: 30px;
@@ -405,7 +416,14 @@
                 <div id="round-num" class="round-indicator">Раунд 1 із 12</div>
                 <div id="difficulty-indicator" class="difficulty-badge diff-easy">Легкий</div>
             </div>
-            <div class="current-team-badge">Відповідає команда: <span id="current-team-display">Команда</span><br><small style="color:var(--text-muted)">Черга учасника: <span id="current-player-display" style="color:var(--accent-gold)">Учень</span></small></div>
+            <div class="current-team-badge">
+                Відповідає команда: <span id="current-team-display">Команда</span><br>
+                <small style="color:var(--text-muted)">Введення відповіді: <span id="current-player-display" style="color:var(--accent-gold)">Учень</span></small>
+            </div>
+        </div>
+
+        <div id="voting-banner" class="voting-status-box">
+            Крок опитування учасників команди...
         </div>
 
         <div class="question-box">
@@ -415,7 +433,7 @@
 
         <div id="options-container" class="options-grid"></div>
 
-        <button id="next-btn" class="btn" style="display: none;" onclick="nextStep()">Наступне запитання</button>
+        <button id="next-btn" class="btn" style="display: none;" onclick="nextStep()">Наступна команда / Раунд</button>
 
         <div id="scoreboard" class="scoreboard-inline"></div>
     </div>
@@ -447,7 +465,7 @@
             { topic: "Кодування даних. Переведення чисел", q: "Чому дорівнює десяткове число 5 у двійковій системі числення?", a: ["101", "111", "100"], correct: 0 },
             { topic: "Архітектура комп’ютера. Пристрої вводу/виводу", q: "Який із пристроїв призначений виключно для ВИВЕДЕННЯ інформації?", a: ["Монітор", "Клавіатура", "Сканер"], correct: 0 },
             { topic: "Операційні системи. Файлова система", q: "Яка структура є основою організації файлів та папок у більшості сучасних операційних систем?", a: ["Ієрархічна (деревовидна)", "Лінійна таблиця", "Мережева хаотична"], correct: 0 },
-            { topic: "Сучасні технології", q: "Що таке 'Інтернет речей' (IoT)?", a: ["Мережа фізичних об'єктів, обладнаних датчиками для взаємодії між собою", "Процес покупки речей в онлайн-магазинах", "Велика база даних про світову моду"], correct: 0 },
+            { topic: "Сучасні технології", q: "Що таке 'Інтернет речей' (IoT)?", a: ["Мережа物理чних об'єктів, обладнаних датчиками для взаємодії між собою", "Процес покупки речей в онлайн-магазинах", "Велика база даних про світову моду"], correct: 0 },
             { topic: "Технології та навколишнє середовище", q: "Яка основна екологічна проблема пов'язана з постійним оновленням цифрових гаджетів?", a: ["Збільшення кількості електронного сміття (E-waste)", "Надмірне очищення повітря дата-центрами", "Зменшення кількості інтернет-кабелів"], correct: 0 },
             { topic: "Додаткові параметри форматування. Перевірка даних", q: "Навіщо в таблицях (Excel/Sheets) використовують інструмент 'Перевірка даних' (Data Validation)?", a: ["Щоб обмежити введення некоректних значень (наприклад, тільки числа або значення зі списку)", "Щоб автоматично перекласти текст на іншу мову", "Щоб приховати формули від інших"], correct: 0 },
             { topic: "Прості обчислення", q: "З якого символу обов'язково починається будь-яка формула чи функція в електронних таблицях?", a: ["Знак рівності (=)", "Знак плюс (+)", "Символ @"], correct: 0 },
@@ -463,7 +481,7 @@
         ],
         hard: [
             { topic: "Складні розрахунки. Логічні функції", q: "Яке значення поверне функція =AND(5>3; 2>10) в електронній таблиці?", a: ["FALSE (Хибність)", "TRUE (Істина)", "Помилка #VALUE!"], correct: 0 },
-            { topic: "Вкладені функції", q: "Яка конструкція описує вкладену логічну функцію IF (ЯКЩО)?", a: ["Коли всередині параметру 'інакше' або 'тоді' викликається ще одна функція IF", "Коли дві формули написані в сусідніх комірках", "Коли формула підкреслена жирним шрифтом"], correct: 0 },
+            { topic: "Вкладені функції", q: "Яка конструкція описує вкладену логічну funkciju IF (ЯКЩО)?", a: ["Коли всередині параметру 'інакше' або 'тоді' викликається ще одна функція IF", "Коли дві формули написані в сусідніх комірках", "Коли формула підкреслена жирним шрифтом"], correct: 0 },
             { topic: "Посилання", q: "Який вигляд має АБСОЛЮТНЕ посилання на комірку А1, яке не змінюється при копіюванні формули?", a: ["$A$1", "A1", "$A1"], correct: 0 },
             { topic: "Працюємо зі списками", q: "Який індекс (номер елемента) має ПЕРШИЙ елемент списку у більшості мов програмування (наприклад, Python)?", a: ["0", "1", "-1"], correct: 0 },
             { topic: "Умови та розгалуження. Цикли", q: "Який тип циклу використовують, коли кількість повторень заздалегідь НЕВІДОМА і залежить від виконання певної умови?", a: ["Цикл із передумовою (while)", "Цикл із лічильником (for)", "Вкладене розгалуження (if)"], correct: 0 },
@@ -477,19 +495,21 @@
             { topic: "Система контролю версій", q: "Для чого розробники використовують системи контролю версій (наприклад, Git)?", a: ["Для відстеження змін у коді, збереження історії та спільної роботи над проектом", "Для автоматичного прискорення роботи комп'ютера", "Для перекладу коду на інші мови"], correct: 0 },
             { topic: "Технології генерування ідей", q: "Яке головне правило під час проведення класичного 'Мозкового штурму' (Brainstorming)?", a: ["Будь-яка критика ідей на першому етапі заборонена", "Потрібно критикувати кожну ідею одразу", "Ідеї записує тільки вчитель"], correct: 0 },
             { topic: "Дизайн-мислення", q: "З якого етапу завжди починається процес Дизайн-мислення (Design Thinking)?", a: ["Емпатія (розуміння потреб користувача)", "Генерування ідей", "Тестування прототипу"], correct: 0 },
-            { topic: "Проблеми сучасних технологій", q: "Який термін описує нерівність у доступі до сучасних технологій та інтернету між різними верствами населення чи країнами?", a: ["Цифровий розрив (Digital Divide)", "Кібербулінг", "Авторське право"], correct: 0 }
+            { topic: "Проблеми сучасних технологій", q: "Який термін описує нерівність у доступі до сучасних технологій та інтенету між різними верствами населення чи країнами?", a: ["Цифровий розрив (Digital Divide)", "Кібербулінг", "Авторське право"], correct: 0 }
         ]
     };
 
-    let gameQuestions = [];
     let teams = [];
-    let allPlayersGlobal = [];
-    let currentQuestionIndex = 0;
-    let currentTeamIndex = 0;
-    let currentPlayerIndexInTeam = 0; 
-    let currentQuestionVotes = {}; 
+    let currentGameRound = 1; // Від 1 до 12
+    let currentTeamIndex = 0; // Яка команда відповідає зараз всередині раунду
+    let voterIndexInTeam = 0; // Який учень з команди зараз вводить вибір таємно
+
     let currentAnswersMapping = [];
-    const totalRounds = 12;
+    let selectedGlobalQuestion = null;
+    const maxGameRounds = 12;
+
+    // Сховище для накопичення поточних виборів учасників для поточної картки питання
+    let temporaryPlayerChoices = []; 
 
     function addPlayerField() {
         const container = document.getElementById('players-inputs-container');
@@ -515,8 +535,6 @@
             alert("Будь ласка, введіть хоча б одне ім'я учасника!");
             return;
         }
-
-        allPlayersGlobal = players;
 
         const teamsCount = parseInt(document.getElementById('teams-count-select').value);
         
@@ -561,119 +579,158 @@
             }
         });
 
-        const easyShuffled = [...questionsDatabase.easy].sort(() => 0.5 - Math.random()).slice(0, 4);
-        const mediumShuffled = [...questionsDatabase.medium].sort(() => 0.5 - Math.random()).slice(0, 4);
-        const hardShuffled = [...questionsDatabase.hard].sort(() => 0.5 - Math.random()).slice(0, 4);
-        
-        gameQuestions = [...easyShuffled, ...mediumShuffled, ...hardShuffled];
-
-        currentQuestionIndex = 0;
+        currentGameRound = 1;
         currentTeamIndex = 0;
-        currentPlayerIndexInTeam = 0;
-        currentQuestionVotes = {};
+        voterIndexInTeam = 0;
 
         updateScoreboard();
-        showQuestion();
+        showQuestionForTeam();
         switchScreen('screen-game');
     }
 
-    function showQuestion() {
+    function showQuestionForTeam() {
         document.getElementById('next-btn').style.display = 'none';
-        const qData = gameQuestions[currentQuestionIndex];
-        
+        temporaryPlayerChoices = []; // скидаємо тимчасові вибори
+        voterIndexInTeam = 0; // починаємо з першого учасника команди
+
+        let pool = [];
         const diffBadge = document.getElementById('difficulty-indicator');
-        if (currentQuestionIndex < 4) {
+        
+        // Складність росте глобально від номеру раунду гри
+        if (currentGameRound <= 4) {
+            pool = questionsDatabase.easy;
             diffBadge.innerText = "Легкий";
             diffBadge.className = "difficulty-badge diff-easy";
-        } else if (currentQuestionIndex < 8) {
+        } else if (currentGameRound <= 8) {
+            pool = questionsDatabase.medium;
             diffBadge.innerText = "Середній";
             diffBadge.className = "difficulty-badge diff-medium";
         } else {
+            pool = questionsDatabase.hard;
             diffBadge.innerText = "Складний";
             diffBadge.className = "difficulty-badge diff-hard";
         }
 
-        const activeTeam = teams[currentTeamIndex];
-        const activePlayer = activeTeam.players[currentPlayerIndexInTeam];
+        selectedGlobalQuestion = pool[Math.floor(Math.random() * pool.length)];
 
-        document.getElementById('round-num').innerText = `Раунд ${currentQuestionIndex + 1} із ${totalRounds}`;
-        document.getElementById('current-team-display').innerText = activeTeam.name;
-        document.getElementById('current-player-display').innerText = `${activePlayer.name} (${currentPlayerIndexInTeam + 1}/${activeTeam.players.length})`;
-        document.getElementById('q-topic').innerText = `Тема: ${qData.topic}`;
-        document.getElementById('q-text').innerText = qData.q;
+        document.getElementById('round-num').innerText = `Раунд ${currentGameRound} із ${maxGameRounds}`;
+        
+        updateVoterTurnUI();
 
-        const originalOptions = qData.a;
+        document.getElementById('q-topic').innerText = `Тема: ${selectedGlobalQuestion.topic}`;
+        document.getElementById('q-text').innerText = selectedGlobalQuestion.q;
+
+        const originalOptions = selectedGlobalQuestion.a;
         currentAnswersMapping = originalOptions.map((_, i) => i).sort(() => 0.5 - Math.random());
 
+        renderOptionsButtons(false); // Відображаємо звичайні чисті кнопки
+        highlightCurrentTeamInScoreboard();
+    }
+
+    function updateVoterTurnUI() {
+        const activeTeam = teams[currentTeamIndex];
+        const activePlayer = activeTeam.players[voterIndexInTeam];
+        
+        document.getElementById('current-team-display').innerText = activeTeam.name;
+        document.getElementById('current-player-display').innerText = activePlayer.name;
+        
+        document.getElementById('voting-banner').innerText = 
+            `Шаг опитування команди: [ ${activePlayer.name} ], оберіть вашу індивідуальну відповідь на екрані!`;
+    }
+
+    function renderOptionsButtons(isRevealed, selectedIdxByLast = null) {
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = '';
+        const originalOptions = selectedGlobalQuestion.a;
 
         currentAnswersMapping.forEach((originalIdx, buttonIdx) => {
+            let extraClass = '';
+            
+            if (isRevealed) {
+                if (originalIdx === selectedGlobalQuestion.correct) {
+                    extraClass = ' correct'; // зелений для правильної
+                } else if (originalIdx === selectedIdxByLast && originalIdx !== selectedGlobalQuestion.correct) {
+                    extraClass = ' wrong'; // червоний для останньої помилки
+                }
+            }
+
             optionsContainer.innerHTML += `
-                <button class="option-btn" data-orig-idx="${originalIdx}" onclick="checkAnswer(${originalIdx}, this)">
+                <button class="option-btn${extraClass}" data-orig-idx="${originalIdx}" ${isRevealed ? 'disabled' : ''} onclick="handlePlayerChoiceClick(${originalIdx})">
                     ${String.fromCharCode(65 + buttonIdx)}) &nbsp; ${originalOptions[originalIdx]}
                 </button>
             `;
         });
-
-        highlightCurrentTeamInScoreboard();
     }
 
-    function checkAnswer(selectedIndex, clickedBtn) {
-        const qData = gameQuestions[currentQuestionIndex];
+    function handlePlayerChoiceClick(chosenOriginalIndex) {
         const activeTeam = teams[currentTeamIndex];
-        const activePlayer = activeTeam.players[currentPlayerIndexInTeam];
+        const activePlayer = activeTeam.players[voterIndexInTeam];
 
-        activePlayer.questionsAsked += 1;
-        if (selectedIndex === qData.correct) {
-            activePlayer.correctAnswers += 1;
-            currentQuestionVotes[currentPlayerIndexInTeam] = true;
+        // Записуємо вибір поточного гравця
+        temporaryPlayerChoices.push({
+            playerRef: activePlayer,
+            chosenIdx: chosenOriginalIndex
+        });
+
+        // Переходимо до наступного гравця цієї ж команди
+        voterIndexInTeam++;
+
+        if (voterIndexInTeam < activeTeam.players.length) {
+            // Якщо є ще гравці в команді, які не тиснули — просто оновлюємо інтерфейс для наступного учня
+            updateVoterTurnUI();
         } else {
-            currentQuestionVotes[currentPlayerIndexInTeam] = false;
+            // ВСІ ГРАВЦІ КОМАНДИ ВІДПОВІЛИ! Час показати результат цього раунду
+            revealAnswersAndCalculatePoints(chosenOriginalIndex);
         }
+    }
 
-        currentPlayerIndexInTeam++;
+    function revealAnswersAndCalculatePoints(lastChosenIdx) {
+        const activeTeam = teams[currentTeamIndex];
+        let correctCountInTeam = 0;
 
-        if (currentPlayerIndexInTeam < activeTeam.players.length) {
-            showQuestion();
-        } else {
-            let correctCount = 0;
-            for (let idx in currentQuestionVotes) {
-                if (currentQuestionVotes[idx] === true) correctCount++;
-            }
+        // Нараховуємо бали кожному учаснику індивідуально та рахуємо загальний внесок
+        temporaryPlayerChoices.forEach(choice => {
+            choice.playerRef.questionsAsked += 1; // учень отримав +1 питання в свій залік
             
-            let teamFraction = correctCount / activeTeam.players.length;
-            activeTeam.score += teamFraction;
+            if (choice.chosenIdx === selectedGlobalQuestion.correct) {
+                choice.playerRef.correctAnswers += 1; // +1 бал учню в базу (макс 12)
+                correctCountInTeam++;
+            }
+        });
 
-            const allButtons = document.querySelectorAll('.option-btn');
-            allButtons.forEach(btn => {
-                btn.disabled = true;
-                let origIdx = parseInt(btn.getAttribute('data-orig-idx'));
-                if (origIdx === qData.correct) {
-                    btn.classList.add('correct');
-                } else if (origIdx === selectedIndex && !currentQuestionVotes[currentPlayerIndexInTeam - 1]) {
-                    btn.classList.add('wrong');
-                }
-            });
+        // Команда отримує пропорційну частку бала: наприклад якщо 4 з 4 відповіли правильно = +1 бал команді.
+        // Якщо 2 з 4 відповіли правильно = +0.5 балів.
+        let teamTurnScore = (correctCountInTeam / activeTeam.players.length);
+        activeTeam.score += teamTurnScore;
 
-            updateScoreboard();
-            document.getElementById('next-btn').style.display = 'inline-block';
-        }
+        // Оновлюємо банер результатів на екрані
+        document.getElementById('voting-banner').innerHTML = 
+            `🎉 Раунд завершено для команди! Правильних відповідей у складі: <strong>${correctCountInTeam} з ${activeTeam.players.length}</strong>. Команді додано +${teamTurnScore.toFixed(2)} б.`;
+
+        // Візуально підсвічуємо правильні/неправильні варіанти на кнопках
+        renderOptionsButtons(true, lastChosenIdx);
+        
+        updateScoreboard();
+        
+        // Показуємо кнопку переходу далі
+        document.getElementById('next-btn').style.display = 'inline-block';
     }
 
     function nextStep() {
-        currentPlayerIndexInTeam = 0;
-        currentQuestionVotes = {};
+        // Переходимо до наступної команди всередині цього раунду
+        currentTeamIndex++;
 
-        // Передаємо хід наступній команді
-        currentTeamIndex = (currentTeamIndex + 1) % teams.length;
-        
-        // Переходимо до наступного запитання в базі для нової команди
-        currentQuestionIndex++;
+        if (currentTeamIndex >= teams.length) {
+            // Якщо всі команди відповіли на поточне запитання, переходимо до наступного раунду гри
+            currentTeamIndex = 0;
+            currentGameRound++;
+        }
 
-        if (currentQuestionIndex < totalRounds) {
-            showQuestion();
+        if (currentGameRound <= maxGameRounds) {
+            // Якщо гра триває, відкриваємо нову картку запитання
+            showQuestionForTeam();
         } else {
+            // Гра повністю закінчена після 12 раундів
             showFinalResults();
         }
     }
@@ -773,7 +830,7 @@
         let ctx = canvas.getContext('2d');
         
         canvas.width = 1200;
-        canvas.height = 1600;
+        canvas.height = 1800;
         
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -789,7 +846,7 @@
         let currentDate = new Date().toLocaleDateString('uk-UA');
         ctx.font = '20px Montserrat, Helvetica, sans-serif';
         ctx.fillText(`Дата проведення: ${currentDate}`, 80, 200);
-        ctx.fillText(`Загальна кількість раундів: ${totalRounds}`, 80, 235);
+        ctx.fillText(`Кількість раундів гри: ${maxGameRounds} (12 запитань на кожного учня)`, 80, 235);
         
         ctx.strokeStyle = '#cbd5e1';
         ctx.lineWidth = 3;
@@ -819,7 +876,7 @@
         yOffset += 50;
         ctx.fillStyle = '#0f172a';
         ctx.font = 'bold 26px Montserrat, Helvetica, sans-serif';
-        ctx.fillText("ПЕРСОНАЛЬНА ПРОДУКТИВНІСТЬ УЧАСНИКІВ (1-12 балів):", 80, yOffset);
+        ctx.fillText("ПЕРСОНАЛЬНА ПРОДУКТИВНІСТЬ УЧАСНИКІВ (ОЦІНКИ 1-12 БАЛІВ):", 80, yOffset);
         yOffset += 50;
         
         teams.forEach(team => {
@@ -836,10 +893,9 @@
                     accuracy = (player.correctAnswers / player.questionsAsked) * 100;
                 }
                 
-                let baseGrade = Math.round((accuracy / 100) * 12);
-                if (baseGrade < 1 && player.questionsAsked > 0) baseGrade = 1;
-                if (player.correctAnswers === 0) baseGrade = 0;
-
+                // Оскільки раундів рівно 12 і в кожному раунді учень вводив відповідь,
+                // player.correctAnswers — це і є чистий базовий бал від 0 до 12!
+                let baseGrade = player.correctAnswers; 
                 let finalGrade = Math.min(12, baseGrade + bonusPoints);
 
                 ctx.fillStyle = '#1e293b';
