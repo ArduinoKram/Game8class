@@ -483,14 +483,14 @@
             { id: "h1", topic: "Складні розрахунки. Логічні функції", q: "Яке значення поверне функція =AND(5>3; 2>10) в електронній таблиці?", a: ["FALSE (Хибність)", "TRUE (Істина)", "Помилка #VALUE!"], correct: 0 },
             { id: "h2", topic: "Вкладені функції", q: "Яка конструкція описує вкладену логічну функцію IF (ЯКЩО)?", a: ["Коли всередині параметру 'інакше' або 'тоді' викликається ще одна функція IF", "Коли дві формули написані в сусідніх комірках", "Коли формула підкреслена жирним шрифтом"], correct: 0 },
             { id: "h3", topic: "Посилання", q: "Який вигляд має АБСОЛЮТНЕ посилання на комірку А1, яке не змінюється при копіюванні формули?", a: ["$A$1", "A1", "$A1"], correct: 0 },
-            { id: "h4", topic: "Працюємо зі списками", q: "Який індекс (номер елемента) має ПЕРШИЙ element списку у більшості мов програмування (наприклад, Python)?", a: ["0", "1", "-1"], correct: 0 },
+            { id: "h4", topic: "Працюємо зі списками", q: "Який індекс (номер елемента) має ПЕРШИЙ елемент списку у більшості мов програмування (наприклад, Python)?", a: ["0", "1", "-1"], correct: 0 },
             { id: "h5", topic: "Умови та розгалуження. Цикли", q: "Який тип циклу використовують, коли кількість повторень заздалегідь НЕВІДОМА і залежить від виконання певної умови?", a: ["Цикл із передумовою (while)", "Цикл із лічильником (for)", "Вкладене розгалуження (if)"], correct: 0 },
-            { id: "h6", topic: "Функції. Глобальні та локальні змінні", q: "Яка область видимості у локальної змінної, що створена всередині функції?", a: ["Вона доступна ТІЛЬКИ всередині цієї конкретної функції", "Вона доступна в будь-якому місці програми", "Вона зберігається на сервері"], correct: 0 },
+            { id: "h6", topic: "Функції. Глобальні та локальні змінні", q: "Яка область видимості у локальної змінної, що створена всередині функції?", a: ["Вона доступна ТІЛЬКИ всередині цієї конкретної функції", "Вона доступна в будь-коряк місці програми", "Вона зберігається на сервері"], correct: 0 },
             { id: "h7", topic: "Графічний інтерфейс продукта. UI/UX дизайн", q: "У чому головна відмінність між UI та UX в дизайні продуктів?", a: ["UX — це логіка роботи та зручність для користувача; UI — це візуальний вигляд (кольори, кнопки)", "UI — це розробка коду; UX — це малювання ілюстрацій", "Це абсолютно однакові поняття"], correct: 0 },
             { id: "h8", topic: "Композиція та Макет", q: "Що таке 'Вайрфрейм' (Wireframe) або прототип низької точності при проектуванні сайту?", a: ["Схематичний чорно-білий ескіз розташування блоків без детального дизайну", "Готовий зверстаний сайт з анімаціями", "Офіційний логотип компанії"], correct: 0 },
             { id: "h9", topic: "HTML та CSS", q: "Яка технологія відповідає за оформлення, стилі, кольори та шрифти веб-сторінки?", a: ["CSS", "HTML", "SQL"], correct: 0 },
             { id: "h10", topic: "HTML та CSS (Селектори)", q: "За допомогою якого символу в таблиці стилів CSS позначається селектор для ідентифікатора (id)?", a: ["Хештег (#)", "Крапка (.)", "Зірочка (*)"], correct: 0 },
-            { id: "h11", topic: "Вебформи", q: "Який тег HTML використовується для створення поля введення тексту користувачем у веб-формах?", a: ["&lt;input&gt;", "&lt;form&gt;", "&lt;label&gt;"], correct: 0 },
+            { id: "h11", topic: "Вебформи", q: "Який тег HTML використовується для створення поля введення тексту користувачем у веб-формах?", a: ["<input>", "<form>", "<label>"], correct: 0 },
             { id: "h12", topic: "Хостинг та SEO", q: "Що таке SEO (Search Engine Optimization)?", a: ["Оптимізація сайту для підняття його позицій у результатах пошукових систем", "Процес завантаження файлів сайту на сервер", "Захист сайту від кібератак"], correct: 0 },
             { id: "h13", topic: "Система контролю версій", q: "Для чого розробники використовують системи контролю версій (наприклад, Git)?", a: ["Для відстеження змін у коді, збереження історії та спільної роботи над проектом", "Для автоматичного прискорення роботи комп'ютера", "Для перекладу коду на інші мови"], correct: 0 },
             { id: "h14", topic: "Технології генерування ідей", q: "Яке головне правило під час проведення класичного 'Мозкового штурму' (Brainstorming)?", a: ["Будь-яка критика ідей на першому етапі заборонена", "Потрібно критикувати кожну ідею одразу", "Ідеї записує тільки вчитель"], correct: 0 },
@@ -500,17 +500,16 @@
     };
 
     let teams = [];
-    let currentGameRound = 1; 
-    let currentTeamIndex = 0; 
-    let voterIndexInTeam = 0; 
+    let currentGameRound = 1; // Від 1 до 12
+    let currentTeamIndex = 0; // Яка команда відповідає зараз всередині раунду
+    let voterIndexInTeam = 0; // Який учень з команди зараз вводить вибір таємно
 
     let currentAnswersMapping = [];
     let selectedGlobalQuestion = null;
     const maxGameRounds = 12;
-    
-    // Масив для збереження ID вже використаних питань
-    let usedQuestionsIds = []; 
+    let usedQuestionsIds = []; // Сховище для унікальності питань
 
+    // Сховище для накопичення поточних виборів учасників для поточної картки питання
     let temporaryPlayerChoices = []; 
 
     function addPlayerField() {
@@ -584,7 +583,7 @@
         currentGameRound = 1;
         currentTeamIndex = 0;
         voterIndexInTeam = 0;
-        usedQuestionsIds = []; // Очищення використаних питань при старті нової гри
+        usedQuestionsIds = [];
 
         updateScoreboard();
         showQuestionForTeam();
@@ -593,12 +592,13 @@
 
     function showQuestionForTeam() {
         document.getElementById('next-btn').style.display = 'none';
-        temporaryPlayerChoices = []; 
-        voterIndexInTeam = 0; 
+        temporaryPlayerChoices = []; // скидаємо тимчасові вибори
+        voterIndexInTeam = 0; // починаємо з першого учасника команди
 
         let pool = [];
         const diffBadge = document.getElementById('difficulty-indicator');
         
+        // Складність росте глобально від номеру раунду гри
         if (currentGameRound <= 4) {
             pool = questionsDatabase.easy;
             diffBadge.innerText = "Легкий";
@@ -613,18 +613,16 @@
             diffBadge.className = "difficulty-badge diff-hard";
         }
 
-        // Фільтруємо пул, виключаючи вже використані питання
+        // Фільтруємо невикористані питання з пулу
         let availableQuestions = pool.filter(q => !usedQuestionsIds.includes(q.id));
         
-        // Якщо раптом унікальні питання в даному пулі закінчилися, беремо звичайний пул
+        // Якщо раптом унікальні питання в пулі закінчилися (захист від переповнення)
         if (availableQuestions.length === 0) {
-            availableQuestions = pool;
+            availableQuestions = pool; 
         }
 
         selectedGlobalQuestion = availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
-        
-        // Запам'ятовуємо, що це питання вже було використане в цій грі
-        usedQuestionsIds.push(selectedGlobalQuestion.id);
+        usedQuestionsIds.push(selectedGlobalQuestion.id); // Фіксуємо використання
 
         document.getElementById('round-num').innerText = `Раунд ${currentGameRound} із ${maxGameRounds}`;
         
@@ -636,7 +634,7 @@
         const originalOptions = selectedGlobalQuestion.a;
         currentAnswersMapping = originalOptions.map((_, i) => i).sort(() => 0.5 - Math.random());
 
-        renderOptionsButtons(false); 
+        renderOptionsButtons(false); // Відображаємо звичайні чисті кнопки
         highlightCurrentTeamInScoreboard();
     }
 
@@ -661,23 +659,17 @@
             
             if (isRevealed) {
                 if (originalIdx === selectedGlobalQuestion.correct) {
-                    extraClass = ' correct'; 
+                    extraClass = ' correct'; // зелений для правильної
                 } else if (originalIdx === selectedIdxByLast && originalIdx !== selectedGlobalQuestion.correct) {
-                    extraClass = ' wrong'; 
+                    extraClass = ' wrong'; // червоний для останньої помилки
                 }
             }
 
-            const letter = String.fromCharCode(65 + buttonIdx);
-            const optionText = originalOptions[originalIdx];
-
-            const btn = document.createElement('button');
-            btn.className = `option-btn${extraClass}`;
-            btn.setAttribute('data-orig-idx', originalIdx);
-            if (isRevealed) btn.disabled = true;
-            btn.onclick = () => handlePlayerChoiceClick(originalIdx);
-            btn.textContent = `${letter})   ${optionText}`;
-
-            optionsContainer.appendChild(btn);
+            optionsContainer.innerHTML += `
+                <button class="option-btn${extraClass}" data-orig-idx="${originalIdx}" ${isRevealed ? 'disabled' : ''} onclick="handlePlayerChoiceClick(${originalIdx})">
+                    ${String.fromCharCode(65 + buttonIdx)}) &nbsp; ${originalOptions[originalIdx]}
+                </button>
+            `;
         });
     }
 
@@ -685,16 +677,20 @@
         const activeTeam = teams[currentTeamIndex];
         const activePlayer = activeTeam.players[voterIndexInTeam];
 
+        // Записуємо вибір поточного гравця
         temporaryPlayerChoices.push({
             playerRef: activePlayer,
             chosenIdx: chosenOriginalIndex
         });
 
+        // Переходимо до наступного гравця цієї ж команди
         voterIndexInTeam++;
 
         if (voterIndexInTeam < activeTeam.players.length) {
+            // Якщо є ще гравці в команді — оновлюємо інтерфейс для наступного учня
             updateVoterTurnUI();
         } else {
+            // ВСІ ГРАВЦІ КОМАНДИ ВІДПОВІЛИ! Час показати результат
             revealAnswersAndCalculatePoints(chosenOriginalIndex);
         }
     }
@@ -703,11 +699,12 @@
         const activeTeam = teams[currentTeamIndex];
         let correctCountInTeam = 0;
 
+        // Нараховуємо бали кожному учаснику індивідуально
         temporaryPlayerChoices.forEach(choice => {
-            choice.playerRef.questionsAsked += 1; 
+            choice.playerRef.questionsAsked += 1;
             
             if (choice.chosenIdx === selectedGlobalQuestion.correct) {
-                choice.playerRef.correctAnswers += 1; 
+                choice.playerRef.correctAnswers += 1;
                 correctCountInTeam++;
             }
         });
@@ -720,6 +717,7 @@
 
         renderOptionsButtons(true, lastChosenIdx);
         updateScoreboard();
+        
         document.getElementById('next-btn').style.display = 'inline-block';
     }
 
@@ -773,16 +771,17 @@
 
         sortedTeamsGlobal = [...teams].sort((a, b) => b.score - a.score);
 
+        // Нова логіка ранжування підряд без пропусків місць (1, 1, 2, 3...)
         let currentRank = 1;
         teamRanksMapping = {};
         
         sortedTeamsGlobal.forEach((team, idx) => {
-            if (idx > 0 && team.score.toFixed(2) === sortedTeamsGlobal[idx - 1].score.toFixed(2)) {
-                teamRanksMapping[team.name] = teamRanksMapping[sortedTeamsGlobal[idx - 1].name];
-            } else {
-                teamRanksMapping[team.name] = currentRank;
+            if (idx > 0) {
+                if (team.score.toFixed(2) !== sortedTeamsGlobal[idx - 1].score.toFixed(2)) {
+                    currentRank++;
+                }
             }
-            currentRank++;
+            teamRanksMapping[team.name] = currentRank;
         });
 
         let isAbsoluteTie = sortedTeamsGlobal.length > 1 && 
@@ -796,6 +795,7 @@
             document.getElementById('final-title').innerText = "Фінал гри! Вітаємо переможців!";
         }
 
+        // Формуємо чергу відображення для гарного візуального подіуму (2-ге або 1-ше ліворуч, 1-ше по центру)
         let renderOrder = [];
         if (sortedTeamsGlobal.length === 1) {
             renderOrder = [0];
